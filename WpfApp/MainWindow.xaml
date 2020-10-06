@@ -5,8 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Guess Pictures" Height="600" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="20" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <!-- App title -->
+        <Label x:Name="question" Grid.Row="1" Grid.Column="2" 
+                 Grid.ColumnSpan="2" HorizontalAlignment="Center">
+        </Label>
+        <!-- Timer -->
+
+        <!-- Picture -->
+        <Viewbox Grid.Row="3" Grid.Column="2">
+            <Image x:Name="picture1" MaxHeight="400" MaxWidth="300" 
+                   Margin="10 10" />
+        </Viewbox>
+        <Viewbox Grid.Row="3" Grid.Column="3">
+            <Image x:Name="picture2" MaxHeight="400" MaxWidth="300" 
+                   Margin="10 10" />
+        </Viewbox>
+        <!-- Button -->
+        <Viewbox Grid.Row="4" Grid.Column="2" MaxHeight="100">
+            <Button Content="Back" Margin="10"/>
+        </Viewbox>
+        <Viewbox Grid.Row="4" Grid.Column="3" MaxHeight="100">
+            <Button Content="Next" Margin="10"/>
+        </Viewbox>
     </Grid>
 </Window>

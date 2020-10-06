@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,14 @@ namespace WpfApp
         public MainWindow()
         {
             InitializeComponent();
+            string currFolder = AppDomain.CurrentDomain.BaseDirectory;
+            string picLocation = currFolder + "vietnam.png";
+            BitmapImage bitmapImage = new BitmapImage(new Uri(picLocation, UriKind.Absolute));
+            picture1.Source = bitmapImage;
+            picLocation = currFolder + "argentina.png";
+            bitmapImage = new BitmapImage(new Uri(picLocation, UriKind.Absolute));
+            picture2.Source = bitmapImage;
+            question.Content = "asdasd";
         }
     }
 }
