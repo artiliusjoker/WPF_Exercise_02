@@ -26,7 +26,7 @@
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <!-- App title -->
-        <Label x:Name="question" Grid.Row="1" Grid.Column="2" 
+        <Label x:Name="questionOnScreen" Grid.Row="1" Grid.Column="2" 
                  Grid.ColumnSpan="2" HorizontalAlignment="Center">
         </Label>
         <!-- Timer -->
