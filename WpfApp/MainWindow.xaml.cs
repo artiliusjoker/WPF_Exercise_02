@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace WpfApp
 {
@@ -21,6 +21,8 @@ namespace WpfApp
         // Danh cho cac thao tac random
         private bool[] isSelectedArray = null;
         private readonly Random _random = new Random();
+        // Timer
+        private readonly DispatcherTimer timer = new DispatcherTimer();
 
         public MainWindow()
         {
@@ -68,6 +70,26 @@ namespace WpfApp
             InitializeQuestionList();
             ShowQuestionOnScreen(questions[0]);
             currQuestion = 0;
+            // Dem thoi gian bat dau
+            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Tick += new EventHandler(TimerTick);
+            timer.Start();
+        }
+        private void TimerTick(object sender, EventArgs e)
+        {
+            if (!questions[currQuestion].IsAnswered)
+            {
+                int timeToAnswer = questions[currQuestion].TimeToAnswer;
+                timerOnScreen.Text = timeToAnswer.ToString();
+                if (timeToAnswer == 0)
+                {
+                    questions[currQuestion].IsAnswered = true;
+                }
+                if (timeToAnswer > 0)
+                {
+                    questions[currQuestion].TimeToAnswer -= 1;
+                }
+            }       
         }
         private void ShowQuestionOnScreen(Question question)
         {
@@ -96,7 +118,7 @@ namespace WpfApp
             {
                 picture1.Source = bitmapImage;
             }
-        }
+        }    
 
         private void Back_Click_Button(object sender, RoutedEventArgs e)
         {

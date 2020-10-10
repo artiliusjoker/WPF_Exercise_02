@@ -10,6 +10,8 @@ namespace WpfApp
         public string QuestionText { get; set; }
         public string CorrectAnswer { get; set; }
         public string WrongAnswer{get; set;}
+        public int TimeToAnswer { get; set; }
+        public bool IsAnswered { get; set; }
         // Khoi tao cau tra loi
         public Question(string countryName, string correctAnswer)
         {
@@ -19,6 +21,8 @@ namespace WpfApp
             questionBuilder.Append(" ?");
             QuestionText = questionBuilder.ToString();
             CorrectAnswer = correctAnswer;
+            TimeToAnswer = 30;
+            IsAnswered = false;
         }
         // Thiet lap cau tra loi sai
 

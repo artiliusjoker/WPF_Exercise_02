@@ -27,8 +27,13 @@
         </Grid.RowDefinitions>
         <!-- App title -->
         <Label x:Name="questionOnScreen" Grid.Row="1" Grid.Column="2" 
-                 Grid.ColumnSpan="2" HorizontalAlignment="Center">
+                 Grid.ColumnSpan="2" HorizontalAlignment="Center"
+                 FontSize="30">
         </Label>
+        <TextBlock x:Name="timerOnScreen" Grid.Row="2" Grid.Column="2" 
+                 Grid.ColumnSpan="2" HorizontalAlignment="Center"
+                 FontSize="20">
+        </TextBlock>
         <!-- Timer -->
 
         <!-- Picture -->
