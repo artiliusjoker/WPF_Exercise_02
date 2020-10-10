@@ -33,19 +33,33 @@
 
         <!-- Picture -->
         <Viewbox Grid.Row="3" Grid.Column="2">
-            <Image x:Name="picture1" MaxHeight="400" MaxWidth="300" 
-                   Margin="10 10" />
+            <Button x:Name="picture1_button" 
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                MaxWidth="300" MaxHeight="400" FontFamily="Verdana"         
+                Margin="15 5" Background="#e6e6ff">
+                <Image x:Name="picture1" MaxHeight="400" MaxWidth="300" 
+                   Margin="10 10"/>
+            </Button>
         </Viewbox>
+        
         <Viewbox Grid.Row="3" Grid.Column="3">
-            <Image x:Name="picture2" MaxHeight="400" MaxWidth="300" 
+            <Button x:Name="picture2_button" 
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                MaxWidth="300" MaxHeight="400" FontFamily="Verdana"         
+                Margin="15 5" Background="#e6e6ff">
+                <Image x:Name="picture2" MaxHeight="400" MaxWidth="300" 
                    Margin="10 10" />
+            </Button>
         </Viewbox>
+      
         <!-- Button -->
         <Viewbox Grid.Row="4" Grid.Column="2" MaxHeight="100">
-            <Button Content="Back" Margin="10"/>
+            <Button Content="Back" Margin="10"
+                    Click="Back_Click_Button"/>
         </Viewbox>
         <Viewbox Grid.Row="4" Grid.Column="3" MaxHeight="100">
-            <Button Content="Next" Margin="10"/>
+            <Button Content="Next" Margin="10"
+                    Click="Next_Click_Button"/>
         </Viewbox>
     </Grid>
 </Window>

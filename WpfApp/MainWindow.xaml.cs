@@ -12,22 +12,31 @@ namespace WpfApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Constant
         private readonly string CURR_FOLDER = AppDomain.CurrentDomain.BaseDirectory;
+        // Danh sach cau hoi
         private readonly List<Question> questions = new List<Question>();
-
+        // Cau hoi hien tai dang hien tren man hinh
+        private int currQuestion;
         // Danh cho cac thao tac random
-        private readonly List<int> chosenIndex = new List<int>();
+        private bool[] isSelectedArray = null;
         private readonly Random _random = new Random();
 
         public MainWindow()
         {
-
             InitializeComponent();
-            InitializeGame();
+            StartGame();
         }
     private void InitializeQuestionList() {
+            // Doc du lieu
             string[] lines = File.ReadAllLines(CURR_FOLDER + "AppData.txt");
-            
+            // Khoi tao mang danh dau
+            isSelectedArray = new bool[lines.Length];
+            for(int i = 0; i < isSelectedArray.Length; i++)
+            {
+                isSelectedArray[i] = false;
+            }
+
             for(int i = 0; i < 10; i++)
             {             
                 // Chon ngau nhien cau hoi
@@ -47,16 +56,18 @@ namespace WpfApp
         private int RandomizeLine(string[] lines)
         {
             int randomLine = _random.Next(lines.Length);
-            while (chosenIndex.Exists(x => x == randomLine))
+            while (isSelectedArray[randomLine])
             {
                 randomLine = _random.Next(lines.Length);
             }
+            isSelectedArray[randomLine] = true;
             return randomLine;
         }
-        private void InitializeGame() 
+        private void StartGame() 
         {
             InitializeQuestionList();
             ShowQuestionOnScreen(questions[0]);
+            currQuestion = 0;
         }
         private void ShowQuestionOnScreen(Question question)
         {
@@ -84,6 +95,24 @@ namespace WpfApp
             else if(!flag)
             {
                 picture1.Source = bitmapImage;
+            }
+        }
+
+        private void Back_Click_Button(object sender, RoutedEventArgs e)
+        {
+            if(currQuestion > 0)
+            {
+                currQuestion -= 1;
+                ShowQuestionOnScreen(questions[currQuestion]);
+            }
+        }
+
+        private void Next_Click_Button(object sender, RoutedEventArgs e)
+        {
+            if (currQuestion < questions.Count - 1)
+            {
+                currQuestion += 1;
+                ShowQuestionOnScreen(questions[currQuestion]);
             }
         }
     }
