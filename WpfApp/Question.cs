@@ -10,7 +10,10 @@ namespace WpfApp
         public string QuestionText { get; set; }
         public string CorrectAnswer { get; set; }
         public string WrongAnswer{get; set;}
+        // Answer position on screen
         public int TimeToAnswer { get; set; }
+        public bool CorrectAnswerPosition { get; set; }
+        public bool WrongAnswerPosition { get; set; }
         public bool IsAnswered { get; set; }
         // Khoi tao cau tra loi
         public Question(string countryName, string correctAnswer)
@@ -24,14 +27,7 @@ namespace WpfApp
             TimeToAnswer = 30;
             IsAnswered = false;
         }
-        // Thiet lap cau tra loi sai
-
-        // Kiem tra cau tra loi dung
-        public bool IsCorrect(string answer)
-        {
-            int compareResult = CorrectAnswer.CompareTo(answer);
-            return (compareResult == 0);
-        }
+        // Chuyen thanh dia chi tuyet doi
         public void ConvertToAbsolutePath(string currFolder)
         {
             StringBuilder stringBuilder = new StringBuilder();

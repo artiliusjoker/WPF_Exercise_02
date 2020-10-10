@@ -9,6 +9,6 @@ namespace WpfApp
     class Player
     {
         public string PlayerName { get; set; }
-        
+        public bool[] AnswerArray = null; 
     }
 }

@@ -15,7 +15,9 @@ namespace WpfApp
         // Constant
         private readonly string CURR_FOLDER = AppDomain.CurrentDomain.BaseDirectory;
         // Danh sach cau hoi
-        private readonly List<Question> questions = new List<Question>();
+        private readonly List<Question> questions = new List<Question>(10);
+        // Danh sach cau tra loi cho cau hoi
+        private readonly bool[] answers = new bool[10];
         // Cau hoi hien tai dang hien tren man hinh
         private int currQuestion;
         // Danh cho cac thao tac random
@@ -38,7 +40,7 @@ namespace WpfApp
             {
                 isSelectedArray[i] = false;
             }
-
+            // Tao 10 cau hoi
             for(int i = 0; i < 10; i++)
             {             
                 // Chon ngau nhien cau hoi
@@ -49,9 +51,25 @@ namespace WpfApp
                 line = lines[RandomizeLine(lines)];
                 temp = line.Split(':');
                 question.WrongAnswer = temp[1];
-                // Them cau hoi vao bo cau hoi
-
+                // Chinh sua thanh duong dan tuyet doi
                 question.ConvertToAbsolutePath(CURR_FOLDER);
+                // Chon 1 vi tri ngau nhien trong 2 vi tri
+                // true : vitri1
+                // false : vitri2
+                int randomizedPicturePosition = _random.Next(2);
+                if (randomizedPicturePosition == 0)
+                {
+                    question.CorrectAnswerPosition = true;
+                    question.WrongAnswerPosition = false;
+                }
+                else if (randomizedPicturePosition == 1)
+                {
+                    question.CorrectAnswerPosition = false;
+                    question.WrongAnswerPosition = true;
+                }
+                // Luu lai cau tra loi dung
+                answers[i] = question.CorrectAnswerPosition;
+                // Them cau hoi hoan thien vao bo cau hoi
                 questions.Add(question);
             }
         }
@@ -93,31 +111,22 @@ namespace WpfApp
         }
         private void ShowQuestionOnScreen(Question question)
         {
+            // Dat vao cau hoi
             questionOnScreen.Content = question.QuestionText;
-            bool flag = true;                   
-            BitmapImage bitmapImage = new BitmapImage(new Uri(question.CorrectAnswer, UriKind.Absolute));
-        
-            int randomizedPicturePosition = _random.Next(2);
             // Dat vao cau tra loi dung
-            if(randomizedPicturePosition == 0)
-            {
-                picture1.Source = bitmapImage;              
-            }
-            else if (randomizedPicturePosition == 1)
-            {
-                flag = false;
-                picture2.Source = bitmapImage;              
-            }
-            // Dat vao cau tra loi sai
-            bitmapImage = new BitmapImage(new Uri(question.WrongAnswer, UriKind.Absolute));
-            if(flag)
-            {
-                picture2.Source = bitmapImage;
-            }
-            else if(!flag)
+            BitmapImage bitmapImage = new BitmapImage(new Uri(question.CorrectAnswer, UriKind.Absolute));
+            if(question.CorrectAnswerPosition)
             {
                 picture1.Source = bitmapImage;
             }
+            else picture2.Source = bitmapImage;       
+            // Dat vao cau tra loi sai
+            bitmapImage = new BitmapImage(new Uri(question.WrongAnswer, UriKind.Absolute));
+            if (question.WrongAnswerPosition)
+            {
+                picture1.Source = bitmapImage;
+            }
+            else picture2.Source = bitmapImage;
         }    
 
         private void Back_Click_Button(object sender, RoutedEventArgs e)
