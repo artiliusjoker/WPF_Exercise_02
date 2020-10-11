@@ -18,6 +18,11 @@ namespace WpfApp
             AnswerArray = new bool[10];
             Score = 0;
         }
+        public Player(string playerName, int score)
+        {
+            Score = score;
+            PlayerName = playerName;
+        }
         public void AddScore()
         {
             Score += 1;

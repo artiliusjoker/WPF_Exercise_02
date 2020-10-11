@@ -247,7 +247,8 @@ namespace WpfApp
 
         private void HistoryButton_Click(object sender, RoutedEventArgs e)
         {
-
+            HistoryWindow historyWindow = new HistoryWindow();
+            historyWindow.Show();
         }
     }
 }
