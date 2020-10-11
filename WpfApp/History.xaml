@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp"
         mc:Ignorable="d"
-        Title="History" Height="600" Width="300">
+        Title="History" Height="600" Width="300"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <DataGrid AutoGenerateColumns="False" 
           Height="500" 

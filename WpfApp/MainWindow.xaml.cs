@@ -28,7 +28,7 @@ namespace WpfApp
         // Timer
         private readonly DispatcherTimer timer = new DispatcherTimer();
         // Nguoi choi
-        private readonly Player player = new Player("Bob"); 
+        private readonly Player player = new Player("DefaultPlayer"); 
 
         public MainWindow()
         {
@@ -228,6 +228,12 @@ namespace WpfApp
                 }
             }
             ShowCurrentPlayerScore();
+            string input = PromptDialog.ShowAndGetInput("Please input your name");
+            if(input != null)
+            {
+                player.PlayerName = input;
+            }
+            player.SaveToFile("History.txt");
             Stop();
         }
 

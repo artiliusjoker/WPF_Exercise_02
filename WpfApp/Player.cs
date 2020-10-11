@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,20 @@ namespace WpfApp
         public void AddScore()
         {
             Score += 1;
+        }
+        public override string ToString()
+        {
+            return PlayerName + ":" + Score;
+        }
+        public void SaveToFile(string fileName)
+        {
+            if (File.Exists(fileName))
+            {
+                using (StreamWriter sw = File.AppendText(fileName))
+                {
+                    sw.WriteLine(ToString());
+                }
+            }
         }
     }
 }
