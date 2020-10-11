@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using System.Windows.Media;
+using System.Diagnostics;
 
 namespace WpfApp
 {
@@ -15,7 +17,7 @@ namespace WpfApp
         // Constant
         private readonly string CURR_FOLDER = AppDomain.CurrentDomain.BaseDirectory;
         // Danh sach cau hoi
-        private readonly List<Question> questions = new List<Question>(10);
+        private readonly List<AppQuestion> questions = new List<AppQuestion>(10);
         // Danh sach cau tra loi cho cau hoi
         private readonly bool[] answers = new bool[10];
         // Cau hoi hien tai dang hien tren man hinh
@@ -25,53 +27,64 @@ namespace WpfApp
         private readonly Random _random = new Random();
         // Timer
         private readonly DispatcherTimer timer = new DispatcherTimer();
+        // Nguoi choi
+        private readonly Player player = new Player("Bob"); 
 
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent();          
             StartGame();
         }
     private void InitializeQuestionList() {
-            // Doc du lieu
-            string[] lines = File.ReadAllLines(CURR_FOLDER + "AppData.txt");
-            // Khoi tao mang danh dau
-            isSelectedArray = new bool[lines.Length];
-            for(int i = 0; i < isSelectedArray.Length; i++)
+        // Doc du lieu
+        string[] lines = File.ReadAllLines(CURR_FOLDER + "AppData.txt");
+        // Khoi tao mang danh dau
+        isSelectedArray = new bool[lines.Length];
+        for(int i = 0; i < isSelectedArray.Length; i++)
+        {
+            isSelectedArray[i] = false;
+        }
+        // Tao 10 cau hoi
+        for(int i = 0; i < 10; i++)
+        {
+            AppQuestion newQuestion = new AppQuestion();
+            // Chon ngau nhien hinh dung
+            string line = lines[RandomizeLine(lines)];
+            string[] temp = line.Split(':');
+            Question question1 = new Question(temp[0], temp[1]);
+            question1.ConvertToAbsolutePath(CURR_FOLDER);
+
+            // Chon ngau nhien hinh sai de danh lac huong
+            line = lines[RandomizeLine(lines)];
+            temp = line.Split(':');
+            Question question2 = new Question(temp[0], temp[1]);
+            question2.ConvertToAbsolutePath(CURR_FOLDER);
+
+            // Chon 1 vi tri ngau nhien trong 2 vi tri
+            // true : vitri1
+            // false : vitri2
+            int randomizedPicturePosition = _random.Next(2);
+            if (randomizedPicturePosition == 0)
             {
-                isSelectedArray[i] = false;
+                question1.Position = true;
+                question2.Position = false;
+                newQuestion.FirstQuestion = question1;
+                newQuestion.SecondQuestion = question2;
             }
-            // Tao 10 cau hoi
-            for(int i = 0; i < 10; i++)
-            {             
-                // Chon ngau nhien cau hoi
-                string line = lines[RandomizeLine(lines)];
-                string[] temp = line.Split(':');
-                Question question = new Question(temp[0], temp[1]);
-                // Chon ngau nhien cau tra loi sai de danh lac huong
-                line = lines[RandomizeLine(lines)];
-                temp = line.Split(':');
-                question.WrongAnswer = temp[1];
-                // Chinh sua thanh duong dan tuyet doi
-                question.ConvertToAbsolutePath(CURR_FOLDER);
-                // Chon 1 vi tri ngau nhien trong 2 vi tri
-                // true : vitri1
-                // false : vitri2
-                int randomizedPicturePosition = _random.Next(2);
-                if (randomizedPicturePosition == 0)
-                {
-                    question.CorrectAnswerPosition = true;
-                    question.WrongAnswerPosition = false;
-                }
-                else if (randomizedPicturePosition == 1)
-                {
-                    question.CorrectAnswerPosition = false;
-                    question.WrongAnswerPosition = true;
-                }
-                // Luu lai cau tra loi dung
-                answers[i] = question.CorrectAnswerPosition;
-                // Them cau hoi hoan thien vao bo cau hoi
-                questions.Add(question);
+            else if (randomizedPicturePosition == 1)
+            {
+                question1.Position = false;
+                question2.Position = true;
+                newQuestion.FirstQuestion = question2;
+                newQuestion.SecondQuestion = question1;
             }
+            // Luu lai cau tra loi dung
+            answers[i] = question1.Position;
+
+            // Them cau hoi hoan thien vao bo cau hoi
+            newQuestion.CorrectQuestion = question1;
+            questions.Add(newQuestion);
+        }
         }
         private int RandomizeLine(string[] lines)
         {
@@ -86,7 +99,7 @@ namespace WpfApp
         private void StartGame() 
         {
             InitializeQuestionList();
-            ShowQuestionOnScreen(questions[0]);
+            DisplayQuestionOnScreen(questions[0]);
             currQuestion = 0;
             // Dem thoi gian bat dau
             timer.Interval = new TimeSpan(0, 0, 1);
@@ -102,6 +115,7 @@ namespace WpfApp
                 if (timeToAnswer == 0)
                 {
                     questions[currQuestion].IsAnswered = true;
+                    NextQuestion();
                 }
                 if (timeToAnswer > 0)
                 {
@@ -109,43 +123,76 @@ namespace WpfApp
                 }
             }       
         }
-        private void ShowQuestionOnScreen(Question question)
-        {
+        private void DisplayQuestionOnScreen(AppQuestion question)
+        {         
             // Dat vao cau hoi
-            questionOnScreen.Content = question.QuestionText;
-            // Dat vao cau tra loi dung
-            BitmapImage bitmapImage = new BitmapImage(new Uri(question.CorrectAnswer, UriKind.Absolute));
-            if(question.CorrectAnswerPosition)
+            questionOnScreen.Content = question.CorrectQuestion.QuestionText;
+            // Dat vao cau tra loi thu nhat
+            BitmapImage bitmapImage = new BitmapImage(new Uri(question.FirstQuestion.Answer, UriKind.Absolute));
+            picture1.Source = bitmapImage;
+            // Dat vao cau tra loi thu hai
+            bitmapImage = new BitmapImage(new Uri(question.SecondQuestion.Answer, UriKind.Absolute));
+            picture2.Source = bitmapImage;
+            // Tra loi roi khong cho sua lai
+            if (question.IsAnswered)
             {
-                picture1.Source = bitmapImage;
+                picture1_button.IsEnabled = false;
+                picture2_button.IsEnabled = false;
             }
-            else picture2.Source = bitmapImage;       
-            // Dat vao cau tra loi sai
-            bitmapImage = new BitmapImage(new Uri(question.WrongAnswer, UriKind.Absolute));
-            if (question.WrongAnswerPosition)
+        }
+        private void NextQuestion()
+        {
+            if(currQuestion == questions.Count - 1)
             {
-                picture1.Source = bitmapImage;
+                for(int i = 0; i < questions.Count; i ++)
+                {
+                    if(answers[i] == player.AnswerArray[i])
+                    {
+                        player.AddScore();
+                    }
+                }
+                questionOnScreen.Content = player.Score.ToString();
             }
-            else picture2.Source = bitmapImage;
-        }    
-
+            if (currQuestion < questions.Count - 1)
+            {
+                currQuestion += 1;
+                DisplayQuestionOnScreen(questions[currQuestion]);
+            }
+            // reset lai button
+            if (!questions[currQuestion].IsAnswered)
+            {
+                picture1_button.IsEnabled = true;
+                picture2_button.IsEnabled = true;
+            }
+        }
         private void Back_Click_Button(object sender, RoutedEventArgs e)
         {
             if(currQuestion > 0)
             {
                 currQuestion -= 1;
-                ShowQuestionOnScreen(questions[currQuestion]);
+                DisplayQuestionOnScreen(questions[currQuestion]);
             }
         }
 
         private void Next_Click_Button(object sender, RoutedEventArgs e)
         {
-            if (currQuestion < questions.Count - 1)
-            {
-                currQuestion += 1;
-                ShowQuestionOnScreen(questions[currQuestion]);
-            }
+            NextQuestion();
+        }
+
+        private void Picture1_button_Click(object sender, RoutedEventArgs e)
+        {
+            questions[currQuestion].IsAnswered = true;
+            questions[currQuestion].FirstQuestion.IsChosen = true;
+            NextQuestion();
+            player.AnswerArray[currQuestion] = true;
+        }
+
+        private void Picture2_button_Click(object sender, RoutedEventArgs e)
+        {
+            questions[currQuestion].IsAnswered = true;
+            questions[currQuestion].SecondQuestion.IsChosen = true;
+            NextQuestion();
+            player.AnswerArray[currQuestion] = false;
         }
     }
-   
 }
