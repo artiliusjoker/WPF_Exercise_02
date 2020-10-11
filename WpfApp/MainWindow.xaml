@@ -12,6 +12,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="20" />
         </Grid.ColumnDefinitions>
@@ -22,22 +23,42 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-        <!-- App title -->
-        <Label x:Name="questionOnScreen" Grid.Row="1" Grid.Column="2" 
-                 Grid.ColumnSpan="2" HorizontalAlignment="Center"
-                 FontSize="30">
-        </Label>
-        <TextBlock x:Name="timerOnScreen" Grid.Row="2" Grid.Column="2" 
+        <!-- Current question index -->
+        <TextBlock x:Name="currentQuestionIndex" Grid.Row="1" Grid.Column="2" 
                  Grid.ColumnSpan="2" HorizontalAlignment="Center"
                  FontSize="20">
         </TextBlock>
+        <!-- Submit button -->
+        <Viewbox Grid.Row="1" Grid.Column="4" 
+                 Grid.RowSpan="2" Height="100" Width="100" >
+            <Button x:Name="SubmitButon" Content="Submit" 
+                    Margin="10"
+                    Click="SubmitButon_Click"/>
+        </Viewbox>
+        <!-- History button -->
+        <Viewbox Grid.Row="2" Grid.Column="4" 
+                 Grid.RowSpan="2" Height="100" Width="100" >
+            <Button x:Name="HistoryButton" Content="History" 
+                    Margin="10"
+                    Click="HistoryButton_Click"/>
+        </Viewbox>
+        <!-- App title -->
+        <Label x:Name="questionOnScreen" Grid.Row="2" Grid.Column="2" 
+                 Grid.ColumnSpan="2" HorizontalAlignment="Center"
+                 FontSize="30">
+        </Label>
         <!-- Timer -->
+        <TextBlock x:Name="timerOnScreen" Grid.Row="3" Grid.Column="2" 
+                 Grid.ColumnSpan="2" HorizontalAlignment="Center"
+                 FontSize="20">
+        </TextBlock>
 
         <!-- Picture -->
-        <Viewbox Grid.Row="3" Grid.Column="2">
+        <Viewbox Grid.Row="4" Grid.Column="2">
             <Button x:Name="picture1_button" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
                 MaxWidth="300" MaxHeight="400" FontFamily="Verdana"         
@@ -48,7 +69,7 @@
             </Button>
         </Viewbox>
         
-        <Viewbox Grid.Row="3" Grid.Column="3">
+        <Viewbox Grid.Row="4" Grid.Column="3">
             <Button x:Name="picture2_button" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
                 MaxWidth="300" MaxHeight="400" FontFamily="Verdana"         
@@ -60,12 +81,12 @@
         </Viewbox>
       
         <!-- Button -->
-        <Viewbox Grid.Row="4" Grid.Column="2" MaxHeight="100">
-            <Button Content="Back" Margin="10"
+        <Viewbox Grid.Row="5" Grid.Column="2" MaxHeight="100">
+            <Button x:Name="BackButton" Content="Back" Margin="10"
                     Click="Back_Click_Button"/>
         </Viewbox>
-        <Viewbox Grid.Row="4" Grid.Column="3" MaxHeight="100">
-            <Button Content="Next" Margin="10"
+        <Viewbox Grid.Row="5" Grid.Column="3" MaxHeight="100">
+            <Button x:Name="NextButton" Content="Next" Margin="10"
                     Click="Next_Click_Button"/>
         </Viewbox>
     </Grid>

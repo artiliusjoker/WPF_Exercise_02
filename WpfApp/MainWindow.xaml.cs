@@ -114,7 +114,6 @@ namespace WpfApp
                 timerOnScreen.Text = timeToAnswer.ToString();
                 if (timeToAnswer == 0)
                 {
-                    questions[currQuestion].IsAnswered = true;
                     NextQuestion();
                 }
                 if (timeToAnswer > 0)
@@ -124,7 +123,10 @@ namespace WpfApp
             }       
         }
         private void DisplayQuestionOnScreen(AppQuestion question)
-        {         
+        {
+            // Dat vao thu tu cau hoi
+            currentQuestionIndex.Text = (currQuestion+1).ToString() + "/10";
+
             // Dat vao cau hoi
             questionOnScreen.Content = question.CorrectQuestion.QuestionText;
             // Dat vao cau tra loi thu nhat
@@ -141,18 +143,7 @@ namespace WpfApp
             }
         }
         private void NextQuestion()
-        {
-            if(currQuestion == questions.Count - 1)
-            {
-                for(int i = 0; i < questions.Count; i ++)
-                {
-                    if(answers[i] == player.AnswerArray[i])
-                    {
-                        player.AddScore();
-                    }
-                }
-                questionOnScreen.Content = player.Score.ToString();
-            }
+        {           
             if (currQuestion < questions.Count - 1)
             {
                 currQuestion += 1;
@@ -165,6 +156,7 @@ namespace WpfApp
                 picture2_button.IsEnabled = true;
             }
         }
+
         private void Back_Click_Button(object sender, RoutedEventArgs e)
         {
             if(currQuestion > 0)
@@ -181,18 +173,81 @@ namespace WpfApp
 
         private void Picture1_button_Click(object sender, RoutedEventArgs e)
         {
+            player.AnswerArray[currQuestion] = true;
             questions[currQuestion].IsAnswered = true;
             questions[currQuestion].FirstQuestion.IsChosen = true;
+            if (currQuestion == (questions.Count - 1))
+            {
+                SubmitAndCalculateScore();
+                return;
+            }          
             NextQuestion();
-            player.AnswerArray[currQuestion] = true;
         }
 
         private void Picture2_button_Click(object sender, RoutedEventArgs e)
         {
+            player.AnswerArray[currQuestion] = false;
             questions[currQuestion].IsAnswered = true;
             questions[currQuestion].SecondQuestion.IsChosen = true;
+            if (currQuestion == (questions.Count - 1))
+            {
+                SubmitAndCalculateScore();
+                return;
+            }
             NextQuestion();
-            player.AnswerArray[currQuestion] = false;
+        }
+
+        private void ShowCurrentPlayerScore() 
+        {
+            string message = "Your score is " + player.Score.ToString();
+            const string caption = "Result";
+            MessageBox.Show(message, caption,
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
+        }
+
+        private void SubmitAndCalculateScore()
+        {
+            const string message = "Are you sure that you would like to submit your answers?";
+            const string caption = "Submit";
+            var result = MessageBox.Show(message, caption,
+                                         MessageBoxButton.YesNo,
+                                         MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                for (int i = 0; i < questions.Count; i++)
+                {
+                    // Chi tinh nhung cau nao da tra loi
+                    if (questions[i].IsAnswered)
+                    {
+                        if (answers[i] == player.AnswerArray[i])
+                        {
+                            player.AddScore();
+                        }
+                    }
+                }
+            }
+            ShowCurrentPlayerScore();
+            Stop();
+        }
+
+        private void SubmitButon_Click(object sender, RoutedEventArgs e)
+        {
+            SubmitAndCalculateScore();
+        }
+        private void Stop()
+        {
+            SubmitButon.IsEnabled = false;
+            BackButton.IsEnabled = false;
+            NextButton.IsEnabled = false;
+            picture1_button.IsEnabled = false;
+            picture2_button.IsEnabled = false;
+            timer.Stop();
+        }
+
+        private void HistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
